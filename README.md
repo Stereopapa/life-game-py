@@ -30,15 +30,22 @@ Winner = A if S_A ≥ S_B else B
 
 ---
 
-## Installation & Usage
+## Installation & Usage (Windows)
+**Note:** This application was developed and tested on Windows. Cross-platform compatibility (Linux/macOS) has not been verified.
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/your-username/life-game-py.git
+   cd life-game-py
+
+2. **Set up virtual environment (Recommended)**
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
 
 2. **Install dependencies:**
    ```bash
-   git clone https://github.com/your-username/life-game-py.git
+   pip install -r requirements.txt
 
 3. **Run the application:**
    ```bash
-   git clone https://github.com/your-username/life-game-py.git
+   python main.py
