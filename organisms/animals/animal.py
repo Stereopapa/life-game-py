@@ -36,7 +36,6 @@ class Animal(Organism):
         if attacker == self:
             return
         elif type(attacker) == type(self):
-            print(type(attacker), ", ", type(self))
             attacker.undoMove()
             if self.getAge() < 2 or attacker.getAge() < 2:
                 return

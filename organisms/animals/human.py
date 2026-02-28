@@ -7,7 +7,6 @@ class Human(Animal):
         super().__init__(world, "Człowiek", 5, 4, position)
         self.__specialAbility = 0
         self.__pickedPosition = self._position
-        print(self.__pickedPosition)
 
     def action(self):
         self.increaseAge()
@@ -42,7 +41,6 @@ class Human(Animal):
         res: str = super().toSave()
         res.replace("\n", "")
         res += str(self.__specialAbility)+";"
-        print(res)
         return res
 
     def setDirection(self, direction: (int, int)):

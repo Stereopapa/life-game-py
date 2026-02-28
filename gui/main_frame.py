@@ -1,13 +1,13 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtGui import QFont, QColor, QBrush
-from PyQt5.QtWidgets import QWidget
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtGui import QFont, QColor, QBrush
+from PyQt6.QtWidgets import QWidget
 from worlds.world import World
 from gui.board import BoardFrame
 from save_handling import SaveHandler
 from collections import deque
 
-class UiMainFrame(QWidget):
 
+class UiMainFrame(QWidget):
     BUTTON_STYLE = """
     QPushButton{
         border:2px solid white;
@@ -44,6 +44,7 @@ class UiMainFrame(QWidget):
         background-color: rgb(165, 164, 128);
     }
     """
+
     def __init__(self, MainWindow, world: World):
         super().__init__()
         self.__world = world
@@ -52,9 +53,7 @@ class UiMainFrame(QWidget):
         self.__saves = self.__saveHandler.getSaves().split()
         self.setupUi()
 
-
     def setupUi(self):
-
         self.__mainWindow.setStyleSheet(self.MAIN_WINDOW_STYLE)
 
         self.setupCentralWidget()
@@ -64,20 +63,17 @@ class UiMainFrame(QWidget):
         self.__mainWindow.setCentralWidget(self)
 
         self.retranslateUi()
-        # QtCore.QMetaObject.connectSlotsByName(self.__mainWindow)
-
         self.drawTurn()
-    def setupCentralWidget(self):
-        # self.centralwidget = QtWidgets.QWidget(self.__mainWindow)
-        # self.centralwidget.setObjectName("centralwidget")
 
+    def setupCentralWidget(self):
         self.centralHorizontalLayout = QtWidgets.QVBoxLayout(self)
         self.centralHorizontalLayout.setObjectName("centralHorizontalLayout")
 
     def setupMenuFrame(self):
         self.menuFrame = QtWidgets.QFrame(self)
-        self.menuFrame.setFrameShape(QtWidgets.QFrame.Box)
-        self.menuFrame.setFrameShadow(QtWidgets.QFrame.Plain)
+        # PyQt6: Added .Shape and .Shadow
+        self.menuFrame.setFrameShape(QtWidgets.QFrame.Shape.Box)
+        self.menuFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
         self.menuFrame.setObjectName("menuFrame")
 
         self.menuVerticalLayout = QtWidgets.QHBoxLayout(self.menuFrame)
@@ -121,12 +117,11 @@ class UiMainFrame(QWidget):
         self.menuVerticalLayout.addWidget(self.saveButton)
         self.saveButton.clicked.connect(self.save)
 
-
-
     def setupMainGameFrame(self):
         self.mainGameFrame = QtWidgets.QFrame(self)
-        self.mainGameFrame.setFrameShape(QtWidgets.QFrame.Box)
-        self.mainGameFrame.setFrameShadow(QtWidgets.QFrame.Raised)
+        # PyQt6: Added .Shape and .Shadow
+        self.mainGameFrame.setFrameShape(QtWidgets.QFrame.Shape.Box)
+        self.mainGameFrame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.mainGameFrame.setObjectName("mainGameFrame")
 
         self.mainGameVerticalLayout = QtWidgets.QHBoxLayout(self.mainGameFrame)
@@ -147,12 +142,12 @@ class UiMainFrame(QWidget):
 
     def setupLogsAndLoadFrame(self):
         self.logsAndLoadScroll = QtWidgets.QScrollArea(self.mainGameFrame)
-        self.logsAndLoadScroll.setFrameShape(QtWidgets.QFrame.Box)
-        self.logsAndLoadScroll.setFrameShadow(QtWidgets.QFrame.Plain)
-        self.logsAndLoadScroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        # PyQt6: Added .Shape, .Shadow and .ScrollBarPolicy
+        self.logsAndLoadScroll.setFrameShape(QtWidgets.QFrame.Shape.Box)
+        self.logsAndLoadScroll.setFrameShadow(QtWidgets.QFrame.Shadow.Plain)
+        self.logsAndLoadScroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.logsAndLoadScroll.setObjectName("logsAndLoadScroll")
         self.logsAndLoadScroll.setWidgetResizable(True)
-
 
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
@@ -163,7 +158,7 @@ class UiMainFrame(QWidget):
         self.logsLabel = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.logsLabel.setFont(QFont('Times', 14))
         self.logsLabel.setObjectName("logsLabel")
-        self.logsLabel.setWordWrap(True)  # Allow the text to wrap
+        self.logsLabel.setWordWrap(True)
 
         # loadMenu
         self.savesGroupBox = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
@@ -182,7 +177,7 @@ class UiMainFrame(QWidget):
         self.gridLayout.addWidget(self.exitLoadMenuButton, 0, 1)
 
         # generating saves Buttons
-        self.saveButtonGroup = QtWidgets.QButtonGroup()
+        self.saveButtonGroup = QtWidgets.QButtonGroup(self)  # Added parent
         self.saveButtonGroup.setExclusive(True)
         self.savesButtonsList = deque([])
         row = 1
@@ -190,13 +185,14 @@ class UiMainFrame(QWidget):
             self.addSaveToLoadMenu(save, row)
             row += 1
         self.rebuildGridLayout()
-        # adding to scroll layout
+
         self.logsAndLoadVerticalLayout.addWidget(self.savesGroupBox)
         self.logsAndLoadVerticalLayout.addWidget(self.logsLabel)
 
         self.savesGroupBox.hide()
         self.logsAndLoadScroll.setWidget(self.scrollAreaWidgetContents)
-        self.logsAndLoadVerticalLayout.setAlignment(QtCore.Qt.AlignTop)
+        # PyQt6: Added .AlignmentFlag
+        self.logsAndLoadVerticalLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
     def retranslateUi(self):
         self.turnLabel.setText("Tura: ")
@@ -206,25 +202,24 @@ class UiMainFrame(QWidget):
         self.loadButton.setText("Wczytaj")
         self.specialAbilityButton.setText("Tarcza: Gotowa")
         self.logsLabel.setText("Logi: \n")
+
     def addSaveToLoadMenu(self, name: str, row: int):
         self.savesButtonsList.appendleft(QtWidgets.QPushButton(name[:-4]))
         self.savesButtonsList[0].setCheckable(True)
         self.savesButtonsList[0].setStyleSheet(self.SAVE_BUTTON_STYLE)
         self.saveButtonGroup.addButton(self.savesButtonsList[0])
 
-
     def rebuildGridLayout(self):
         for label in self.savesButtonsList:
             if label is not None:
-                label.setParent(None)
+                self.gridLayout.removeWidget(label)
+
         row = 1
         for label in self.savesButtonsList:
             self.gridLayout.addWidget(label, row, 0, 1, 2)
             row += 1
 
-
     def nextTurn(self):
-        self.logsLabel.setText("Logi:\n"+self.__world.getLogs())  # Example log text
         self.scrollAreaWidgetContents.repaint()
         self.__world.nextTurn()
         self.drawTurn()
@@ -232,6 +227,7 @@ class UiMainFrame(QWidget):
     def switchloadMenu(self):
         self.logsLabel.hide()
         self.savesGroupBox.show()
+
     def switchLogs(self):
         self.savesGroupBox.hide()
         self.uncheckButton()
@@ -244,37 +240,36 @@ class UiMainFrame(QWidget):
     def humanReact(self, direction):
         self.__world.getHuman().resetDirection()
         position = self.__world.getHuman().setDirection(direction)
-        print(position)
         self.boardFrame.repaint()
+
     def keyPressEvent(self, event):
         key = event.key()
-        if key == 81:  # Up Left(q) move
+        # PyQt6 handles keys as Enums, but integer comparison still works.
+        # Clean way: if key == QtCore.Qt.Key.Key_Q:
+        if key == QtCore.Qt.Key.Key_Q:
             self.humanReact((-1, -1))
-        elif key == 87:  # Up(w) move
+        elif key == QtCore.Qt.Key.Key_W:
             self.humanReact((-1, 0))
-        elif key == 69:  # Up Right(e) move
+        elif key == QtCore.Qt.Key.Key_E:
             self.humanReact((-1, 1))
-        elif key == 68:  # Right(d) move
+        elif key == QtCore.Qt.Key.Key_D:
             self.humanReact((0, 1))
-        elif key == 67:  # Down Right(c) move
+        elif key == QtCore.Qt.Key.Key_C:
             self.humanReact((1, 1))
-        elif key == 88:  # down (x) move
+        elif key == QtCore.Qt.Key.Key_X:
             self.humanReact((1, 0))
-        elif key == 90:  # down Left (z) move
+        elif key == QtCore.Qt.Key.Key_Z:
             self.humanReact((1, -1))
-        elif key == 65:  # Left (a) move
+        elif key == QtCore.Qt.Key.Key_A:
             self.humanReact((0, -1))
-        elif key == 83:  # middle (s) stay move
+        elif key == QtCore.Qt.Key.Key_S:
             self.humanReact((0, 0))
-
 
     def load(self):
         clickedButton = self.saveButtonGroup.checkedButton()
-
         if not clickedButton:
             return
-        name = clickedButton.text()+".txt"
-
+        name = clickedButton.text() + ".txt"
         self.__saveHandler.load(name)
         self.switchLogs()
         self.drawTurn()
@@ -284,6 +279,7 @@ class UiMainFrame(QWidget):
         self.addSaveToLoadMenu(name, len(self.__saves))
         self.rebuildGridLayout()
         self.savesGroupBox.repaint()
+
     def uncheckButton(self):
         checked_button = self.saveButtonGroup.checkedButton()
         if checked_button:
@@ -291,16 +287,9 @@ class UiMainFrame(QWidget):
             checked_button.setChecked(False)
             self.saveButtonGroup.setExclusive(True)
 
-    def nextTurn(self):
-        self.scrollAreaWidgetContents.repaint()
-        self.__world.nextTurn()
-        self.drawTurn()
-
     def drawTurn(self):
-        self.turnLabel.setText("Tura: "+str(self.__world.getTurn()))
-        self.populationLabel.setText("Populacja: "+str(self.__world.getPopulation()))
+        self.turnLabel.setText("Tura: " + str(self.__world.getTurn()))
+        self.populationLabel.setText("Populacja: " + str(self.__world.getPopulation()))
         self.logsLabel.setText("Logi:\n" + self.__world.getLogs())
         self.specialAbilityButton.setText(self.__world.getHuman().getSpecialAbilityState())
         self.boardFrame.repaint()
-
-

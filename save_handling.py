@@ -1,3 +1,5 @@
+import os
+
 from worlds.world import World
 from organisms.animals.human import Human
 from datetime import datetime
@@ -7,9 +9,14 @@ class SaveHandler:
         self.__world = world
 
     def getSaves(self) -> str:
+        if not os.path.exists("saves.txt"):
+            open("saves.txt", "w").close()
         savesFile = open("saves.txt", 'r')
         return savesFile.read()
     def save(self) -> str:
+        if not os.path.exists("saves"):
+            os.makedirs("saves")
+
         now = datetime.now()
         d1 = now.strftime("%Y_%m_%d_%H_%M_%S")
         name: str = "save_"+str(d1)+".txt"

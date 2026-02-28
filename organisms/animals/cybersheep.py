@@ -30,7 +30,6 @@ class CyberSheep(Animal):
         else:
             amountY = 0
 
-        print(amountY, ", ", amountX)
         afterMove = (self._position[0]+amountX, self._position[1]+amountY)
         self.setPosition(afterMove)
         if afterMove == pineBorschtPosition:
