@@ -34,7 +34,7 @@ Winner = A if S_A ≥ S_B else B
 **Note:** This application was developed and tested on Windows. Cross-platform compatibility (Linux/macOS) has not been verified.
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/life-game-py.git
+   git clone https://github.com/Stereopapa/life-game-py.git
    cd life-game-py
 
 2. **Set up virtual environment (Recommended)**
